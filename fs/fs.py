@@ -54,11 +54,12 @@ async def generate(error: ServiceParameters, response: Response):
             message = errors[err_name](Path(err_id1), err_id2)
         else:
             message = errors[err_name](Path(err_id))
-        date_time = str(datetime.fromtimestamp(time.time()))
+        date_time = datetime.fromtimestamp(time.time())
+        date_time = date_time.strftime('%Y-%m-%d %H:%M:%S')
 
         err_struct = jsonable_encoder({"exception": err_name, "message": str(message), "timestamp": date_time})
         await session.post(url, json=err_struct)
-        await asyncio.sleep(config.sleep_time)
+        await asyncio.sleep(random.uniform(0.01, 0.5))
     settings.status = False
 
 @router.get("/api/v1/fs/status")
